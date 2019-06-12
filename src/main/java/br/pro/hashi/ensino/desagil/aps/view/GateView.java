@@ -24,7 +24,7 @@ public class GateView extends FixedPanel implements ItemListener {
     private final Image image;
 
     public GateView(Gate gate) {
-        super(BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE + BORDER, GATE_HEIGHT);
+        super(GATE_HEIGHT);
 
         this.gate = gate;
 
@@ -48,6 +48,7 @@ public class GateView extends FixedPanel implements ItemListener {
         for (JCheckBox inputBox : inputBoxes) {
             y += step;
             add(inputBox, x, y, SWITCH_SIZE, SWITCH_SIZE);
+
         }
 
         String name = gate.toString() + ".png";
@@ -82,14 +83,20 @@ public class GateView extends FixedPanel implements ItemListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+
         g.drawImage(image, BORDER + SWITCH_SIZE, 0, GATE_WIDTH, GATE_HEIGHT, this);
 
-        if (gate.read()) {
+        if (gate.read(0)) {
             g.setColor(Color.RED);
         } else {
             g.setColor(Color.BLACK);
         }
-        g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE);
+        if (gate.getOutputSize() == 2) {
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2 - 10, LIGHT_SIZE, LIGHT_SIZE);
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2 + 10, LIGHT_SIZE, LIGHT_SIZE);
+        } else
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE);
+
 
         getToolkit().sync();
     }

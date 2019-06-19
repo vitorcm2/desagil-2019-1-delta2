@@ -25,9 +25,11 @@ public class GateView extends FixedPanel implements ItemListener, MouseListener 
     private final JCheckBox[] inputBoxes;
     private final Image image;
     private Color color;
+    private Color color2;
+
 
     public GateView(Gate gate) {
-        super(BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE + BORDER, GATE_HEIGHT);
+        super(GATE_HEIGHT);
 
         this.gate = gate;
 
@@ -89,34 +91,100 @@ public class GateView extends FixedPanel implements ItemListener, MouseListener 
 
         g.drawImage(image, BORDER + SWITCH_SIZE, 0, GATE_WIDTH, GATE_HEIGHT, this);
 
-        if (gate.read()) {
-            g.setColor(color);
-        } else {
-            g.setColor(Color.BLACK);
-        }
-        g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE);
+        int outputSize = gate.getOutputSize();
 
+        // Espaçamento
+        int y, step;
+        y = -(SWITCH_SIZE / 2);
+        step = (GATE_HEIGHT / (outputSize + 1));
+
+        if (gate.getOutputSize() == 1) {
+            y += step;
+
+
+            if (gate.read(0)) {
+                g.setColor(color);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, y + LIGHT_SIZE / 4, LIGHT_SIZE, LIGHT_SIZE);
+        }
+        if (gate.getOutputSize() == 2) {
+
+
+            if (gate.read(0)) {
+                g.setColor(color);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / (gate.getOutputSize() - 1) - (SWITCH_SIZE / 2), LIGHT_SIZE, LIGHT_SIZE);
+
+            if (gate.read(1)) {
+                g.setColor(color2);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / (gate.getOutputSize()) - (SWITCH_SIZE / 2), LIGHT_SIZE, LIGHT_SIZE);
+
+        }
         getToolkit().sync();
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE / 2;
         int y = GATE_HEIGHT / 2;
 
-        if (Math.sqrt(Math.pow(x - e.getX(), 2) + Math.pow(y - e.getY(), 2)) < LIGHT_SIZE / 2) {
-            Color color = JColorChooser.showDialog(this, null, this.color);
 
-            if (color != null) {
-                this.color = color;
+        if (gate.getOutputSize() == 1) {
+            if (Math.sqrt(Math.pow(x - e.getX(), 2) + Math.pow(y - e.getY(), 2)) < LIGHT_SIZE / 2) {
+                Color color = JColorChooser.showDialog(this, null, this.color);
+
+                if (color != null) {
+
+                    this.color = color;
+                }
+
+                repaint();
             }
+        }
+        if (gate.getOutputSize() == 2) {
+            if (Math.sqrt(Math.pow(x - e.getX(), 2) + Math.pow((GATE_HEIGHT - LIGHT_SIZE) / (gate.getOutputSize() - 1) - (SWITCH_SIZE / 2) - e.getY(), 2)) < LIGHT_SIZE / 2) {
+                Color color = JColorChooser.showDialog(this, null, this.color);
 
-            repaint();
+                if (color != null) {
+                    this.color = color;
+                }
+
+                repaint();
+
+            }
+            if (Math.sqrt(Math.pow(x - e.getX(), 2) + Math.pow((GATE_HEIGHT - LIGHT_SIZE) / (gate.getOutputSize()) - (SWITCH_SIZE / 2) - e.getY(), 2)) < LIGHT_SIZE / 2) {
+                Color color2 = JColorChooser.showDialog(this, null, this.color2);
+
+                if (color2 != null) {
+                    this.color2 = color2;
+                }
+
+                repaint();
+            }
         }
     }
 
-    @Override public void mousePressed(MouseEvent e) {}
-    @Override public void mouseReleased(MouseEvent e) {}
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
 }

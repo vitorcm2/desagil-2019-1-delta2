@@ -9,9 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 
-public class GateView extends FixedPanel implements ItemListener {
+public class GateView extends FixedPanel implements ItemListener, MouseListener {
     private static final int BORDER = 10;
     private static final int SWITCH_SIZE = 18;
     private static final int LIGHT_SIZE = 12;
@@ -22,6 +24,7 @@ public class GateView extends FixedPanel implements ItemListener {
     private final Gate gate;
     private final JCheckBox[] inputBoxes;
     private final Image image;
+    private Color color;
 
     public GateView(Gate gate) {
         super(BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE + BORDER, GATE_HEIGHT);
@@ -59,6 +62,8 @@ public class GateView extends FixedPanel implements ItemListener {
         }
 
         update();
+
+        this.addMouseListener(this);
     }
 
     private void update() {
@@ -85,7 +90,7 @@ public class GateView extends FixedPanel implements ItemListener {
         g.drawImage(image, BORDER + SWITCH_SIZE, 0, GATE_WIDTH, GATE_HEIGHT, this);
 
         if (gate.read()) {
-            g.setColor(Color.RED);
+            g.setColor(color);
         } else {
             g.setColor(Color.BLACK);
         }
@@ -93,4 +98,25 @@ public class GateView extends FixedPanel implements ItemListener {
 
         getToolkit().sync();
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int x = BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE / 2;
+        int y = GATE_HEIGHT / 2;
+
+        if (Math.sqrt(Math.pow(x - e.getX(), 2) + Math.pow(y - e.getY(), 2)) < LIGHT_SIZE / 2) {
+            Color color = JColorChooser.showDialog(this, null, this.color);
+
+            if (color != null) {
+                this.color = color;
+            }
+
+            repaint();
+        }
+    }
+
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
 }

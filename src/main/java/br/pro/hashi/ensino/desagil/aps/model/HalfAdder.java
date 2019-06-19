@@ -1,8 +1,8 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
-public class DeMux extends Gate {
-    public DeMux() {
-        super("DeMux", 2, 2);
+public class HalfAdder extends Gate {
+    public HalfAdder() {
+        super("HalfAdder", 2, 2);
     }
 
     @Override

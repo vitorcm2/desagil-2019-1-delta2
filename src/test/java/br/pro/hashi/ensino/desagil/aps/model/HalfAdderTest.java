@@ -3,11 +3,11 @@ package br.pro.hashi.ensino.desagil.aps.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class DeMuxTest {
-    private DeMux gate;
+public class HalfAdderTest {
+    private HalfAdder gate;
 
     private void build(boolean a, boolean b) {
-        gate = new DeMux();
+        gate = new HalfAdder();
         gate.connect(0, new MockEmitter(a));
         gate.connect(1, new MockEmitter(b));
     }
@@ -20,9 +20,9 @@ public class DeMuxTest {
     }
 
     @Test
-    public void whenReceivingFalseAndTrueShouldReturnFalseAndFalse() {
+    public void whenReceivingFalseAndTrueShouldReturnTrueAndFalse() {
         build(false, true);
-        Assertions.assertFalse(gate.read(0));
+        Assertions.assertTrue(gate.read(0));
         Assertions.assertFalse(gate.read(1));
     }
 
